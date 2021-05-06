@@ -176,7 +176,7 @@ class _AlarmPageState extends State<AlarmPage> {
                                           padding: const EdgeInsets.all(32),
                                           child: Column(
                                             children: [
-                                              FlatButton(
+                                              MaterialButton(
                                                 onPressed: () async {
                                                   var selectedTime =
                                                       await showTimePicker(
@@ -209,21 +209,6 @@ class _AlarmPageState extends State<AlarmPage> {
                                                   style:
                                                       TextStyle(fontSize: 32),
                                                 ),
-                                              ),
-                                              ListTile(
-                                                title: Text('Repeat'),
-                                                trailing: Icon(
-                                                    Icons.arrow_forward_ios),
-                                              ),
-                                              ListTile(
-                                                title: Text('Sound'),
-                                                trailing: Icon(
-                                                    Icons.arrow_forward_ios),
-                                              ),
-                                              ListTile(
-                                                title: Text('Title'),
-                                                trailing: Icon(
-                                                    Icons.arrow_forward_ios),
                                               ),
                                               FloatingActionButton.extended(
                                                 onPressed: onSaveAlarm,
@@ -283,9 +268,9 @@ class _AlarmPageState extends State<AlarmPage> {
   void scheduleAlarm(
       DateTime scheduledNotificationDateTime, AlarmInfo alarmInfo) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'alarm_notif',
-      'alarm_notif',
-      'Channel for Alarm notification',
+      '${alarmInfo.id}',
+      '${alarmInfo.title}',
+      'Hey wake up',
       icon: 'codex_logo',
       sound: RawResourceAndroidNotificationSound('a_long_cold_sting'),
       largeIcon: DrawableResourceAndroidBitmap('codex_logo'),
@@ -299,10 +284,15 @@ class _AlarmPageState extends State<AlarmPage> {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.schedule(0, 'Office', alarmInfo.title,
-        scheduledNotificationDateTime, platformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        alarmInfo.id,
+        '${alarmInfo.title}',
+        alarmInfo.title,
+        scheduledNotificationDateTime,
+        platformChannelSpecifics);
   }
 
+  // saving alarm to data base and add alarm details to notifications
   void onSaveAlarm() {
     DateTime scheduleAlarmDateTime;
     if (_alarmTime.isAfter(DateTime.now()))
@@ -323,7 +313,8 @@ class _AlarmPageState extends State<AlarmPage> {
 
   void deleteAlarm(int id) {
     _alarmHelper.delete(id);
-    //unsubscribe for notification
+    //unsubscribe the notification
+    flutterLocalNotificationsPlugin.cancel(id);
     loadAlarms();
   }
 }

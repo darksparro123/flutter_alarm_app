@@ -11,6 +11,11 @@ import Flutter
     if #available(iOS 10.0, *) {
   UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
 }
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+if(!UserDefaults.standard.bool(forKey: "Notification")) {
+    UIApplication.shared.cancelAllLocalNotifications()
+    UserDefaults.standard.set(true, forKey: "Notification")
+}
 }

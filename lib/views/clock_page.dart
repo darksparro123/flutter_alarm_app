@@ -1,3 +1,5 @@
+//this widget shows the digital clock
+
 import 'dart:async';
 
 import 'package:clock_app/constants/theme_data.dart';

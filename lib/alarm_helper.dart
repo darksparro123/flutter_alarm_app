@@ -39,8 +39,8 @@ class AlarmHelper {
       version: 1,
       onCreate: (db, version) {
         db.execute('''
-          create table $tableAlarm ( 
-          $columnId integer primary key autoincrement, 
+          create table $tableAlarm (
+          $columnId integer primary key autoincrement,
           $columnTitle text not null,
           $columnDateTime text not null,
           $columnPending integer,
